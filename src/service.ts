@@ -6,22 +6,19 @@ import { convertStdoutToJSON } from "./utils";
 export const getDockerResponse = async (
 	image: string,
 	cmd: string[],
-	startOptions: Object
+	startOptions: Object = {},
+	dockerOptions: Object = {}
 ) => {
-	const dockerOptions = { socketPath: "/var/run/docker.sock" };
-
-	const docker = new Docker(dockerOptions);
-	const stdout = new streams.WritableStream();
-	const stderr = new streams.WritableStream();
-	let result: string;
-
-	await docker.run(image, cmd, stdout, startOptions, async (err: any) => {
-		if (err) {
-			console.log(err);
-			console.log(stderr.toString());
-		}
-		result = convertStdoutToJSON(stdout);
-		console.log(result);
-		return result;
+	return new Promise((resolve, reject) => {
+		const docker = new Docker(dockerOptions);
+		const writable = new streams.WritableStream();
+		docker.run(image, cmd, writable, startOptions, (err) => {
+			if (err) {
+				reject(err);
+			}
+			const stdout = writable.toString();
+			const res = convertStdoutToJSON(stdout);
+			resolve(res);
+		});
 	});
 };
