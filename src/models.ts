@@ -1,3 +1,3 @@
 export default interface getAlprRequest {
-	framePath: string[];
+	framePath: string;
 }

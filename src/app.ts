@@ -8,6 +8,7 @@ import { Blob } from "buffer";
 import getAlprRequest from "./models";
 import { getLicensePlateDataFromFrame, uploadSingleImage } from "./controller";
 import { successResponse, errorResponse } from "./response";
+import {readAllJPGFilesName} from "./utils";
 
 const app: express.Application = express();
 const PORT = 3000;
@@ -15,15 +16,9 @@ const IMAGE_DESTINATION_PATH = "assets/frames/test";
 
 app.get("/", async (req: Request, res: Response) => {
 	const { framePath } = req.query as unknown as getAlprRequest;
+	const frames = await readAllJPGFilesName(`assets/frames/${framePath}`);
 	let out: any[] = [];
-	// check if framePath is an array
-	if (!Array.isArray(framePath)) {
-		out = await getLicensePlateDataFromFrame(framePath, res);
-		// res.send(JSON.stringify(out))
-		successResponse(res, out);
-		return;
-	}
-	for (const frame of framePath) {
+	for (const frame of frames) {
 		const plate = await getLicensePlateDataFromFrame(frame, res);
 		out = [...out, plate];
 	}

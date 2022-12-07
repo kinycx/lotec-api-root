@@ -1,3 +1,6 @@
+import { existsSync, readdirSync } from "fs";
+
+
 export const convertStdoutToJSON = (stdout: any) => {
 	let output = JSON.stringify(stdout.toString());
 	output = output.replace(/\\n/g, "\n");
@@ -14,3 +17,10 @@ export const convertStdoutToJSON = (stdout: any) => {
 	output = output.replace(/,}/g, "}");
 	return JSON.parse(output);
 };
+
+export const readAllJPGFilesName = (dir: string): string[] => {
+	const files = readdirSync(dir);
+	const jpgFiles = files.filter((file) => file.endsWith(".jpg"));
+	console.log(jpgFiles);
+	return jpgFiles;
+}

@@ -4,7 +4,7 @@ import { existsSync } from "fs";
 import { getDockerResponse, getUpload } from "./service";
 import { successResponse, errorResponse } from "./response";
 
-const bindPath = `${__dirname}/../assets/frames`;
+const bindPath = `${__dirname}/../assets/frames/test`;
 
 export const getLicensePlateDataFromFrame = async (
 	framePath: string,
