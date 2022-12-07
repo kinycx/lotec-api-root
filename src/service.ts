@@ -1,5 +1,8 @@
+import { Request, Response } from "express";
 import Docker from "dockerode";
 import streams from "memory-streams";
+import multer from "multer";
+import path from "path";
 
 import { convertStdoutToJSON } from "./utils";
 
@@ -22,3 +25,19 @@ export const getDockerResponse = async (
 		});
 	});
 };
+
+export const getUpload = (destinationPath: string) => { 
+	const storage = multer.diskStorage({
+	destination: (req: Request, file: any, cb: any) => {
+		cb(null, destinationPath);
+	},
+	filename: (req: Request, file: any, cb: any) => {
+		console.log(file);
+		cb(null, file.originalname);
+	},
+});
+const upload = multer({ storage: storage });
+
+	return upload;
+}
+

@@ -1,17 +1,15 @@
 import { Request, Response } from "express";
 import { existsSync } from "fs";
 
-import { getDockerResponse } from "./service";
-import getAlprRequest from "./models";
+import { getDockerResponse, getUpload } from "./service";
 import { successResponse, errorResponse } from "./response";
 
 const bindPath = `${__dirname}/assets/frames`;
 
 export const getLicensePlateDataFromFrame = async (
-	req: Request,
+	framePath: string,
 	res: Response
-): Promise<void> => {
-	const { framePath } = req.query as unknown as getAlprRequest;
+): Promise<any> => {
 
 	const startOptions = {
 		HostConfig: {
@@ -29,12 +27,20 @@ export const getLicensePlateDataFromFrame = async (
 		errorResponse(res, 404, "Image not found");
 	} else {
 		const plateDetection = await getDockerResponse(
-			"lotecalpr",
+			"openalpr",
 			cmd,
 			startOptions,
 			dockerOptions
 		);
-		successResponse(res, plateDetection);
-		return;
+		
+		return plateDetection;
 	}
 };
+
+export const uploadSingleImage = (destinationPath: string) => {
+	const upload = getUpload(destinationPath); //"src/assets/frames/test"
+	return upload.array("image");
+	
+};
+
+
