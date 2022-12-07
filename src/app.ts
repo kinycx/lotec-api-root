@@ -11,7 +11,7 @@ import { successResponse, errorResponse } from "./response";
 
 const app: express.Application = express();
 const PORT = 3000;
-const IMAGE_PATH = "src/assets/frames/test";
+const IMAGE_DESTINATION_PATH = "assets/frames/test";
 
 app.get("/", async (req: Request, res: Response) => {
 	const { framePath } = req.query as unknown as getAlprRequest;
@@ -31,7 +31,7 @@ app.get("/", async (req: Request, res: Response) => {
 
 });
 
-app.post("/frame/upload", uploadSingleImage(IMAGE_PATH) ,(req: Request, res: Response) => {
+app.post("/frame/upload", uploadSingleImage(IMAGE_DESTINATION_PATH) ,(req: Request, res: Response) => {
 	console.log(req.file);
 	res.send("File uploaded successfully");
 });
